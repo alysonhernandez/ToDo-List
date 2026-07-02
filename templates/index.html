@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>To-Do</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <h1>To-Do</h1>
+
+  <form class="quick-capture" method="post" action="/tasks">
+    <input type="text" name="title" placeholder="Add a task and hit enter..." autofocus required>
+    <button type="submit">Add</button>
+  </form>
+
+  <div class="tag-filter">
+    <form method="get" action="/">
+      <input type="text" name="tag" placeholder="Filter by tag" value="{{ active_tag or '' }}">
+      <button type="submit">Filter</button>
+      {% if active_tag %}<a href="/">Clear</a>{% endif %}
+    </form>
+  </div>
+
+  {% if not tasks %}
+    <p class="empty-state">
+      {% if active_tag %}No tasks tagged "{{ active_tag }}".{% else %}Nothing here yet -- add a task above.{% endif %}
+    </p>
+  {% endif %}
+
+  <ul class="task-list">
+    {% for task in tasks %}
+      {% include "_task.html" %}
+    {% endfor %}
+  </ul>
+</body>
+</html>

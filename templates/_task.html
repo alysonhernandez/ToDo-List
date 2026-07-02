@@ -1,0 +1,47 @@
+<li class="task priority-{{ task.priority }} {% if task.completed %}completed{% endif %} {% if task.is_overdue %}overdue{% endif %}">
+  <div class="task-row">
+    <form method="post" action="/tasks/{{ task.id }}/toggle" class="inline">
+      <button type="submit" class="check">{{ '✓' if task.completed else '○' }}</button>
+    </form>
+
+    <span class="title">{{ task.title }}</span>
+    <span class="priority-badge">{{ task.priority }}</span>
+    {% if task.due_date %}
+      <span class="due-date">{{ task.due_date }}{% if task.is_overdue %} (overdue){% endif %}</span>
+    {% endif %}
+    {% for tag in task.tags %}<span class="tag">#{{ tag }}</span>{% endfor %}
+
+    <details class="edit-toggle">
+      <summary>Edit</summary>
+      <form method="post" action="/tasks/{{ task.id }}/edit" class="edit-form">
+        <input type="text" name="title" value="{{ task.title }}">
+        <select name="priority">
+          {% for p in ['high', 'med', 'low'] %}
+            <option value="{{ p }}" {% if p == task.priority %}selected{% endif %}>{{ p }}</option>
+          {% endfor %}
+        </select>
+        <input type="date" name="due_date" value="{{ task.due_date or '' }}">
+        <input type="text" name="tags" value="{{ task.tags | join(',') }}" placeholder="tags,comma,separated">
+        <button type="submit">Save</button>
+      </form>
+    </details>
+
+    <form method="post" action="/tasks/{{ task.id }}/delete" class="inline">
+      <button type="submit" class="delete">Delete</button>
+    </form>
+  </div>
+
+  <form class="add-subtask" method="post" action="/tasks">
+    <input type="hidden" name="parent_id" value="{{ task.id }}">
+    <input type="text" name="title" placeholder="Add subtask...">
+    <button type="submit">Add subtask</button>
+  </form>
+
+  {% if task.subtasks %}
+    <ul class="subtask-list">
+      {% for task in task.subtasks %}
+        {% include "_task.html" %}
+      {% endfor %}
+    </ul>
+  {% endif %}
+</li>

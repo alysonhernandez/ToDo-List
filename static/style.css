@@ -1,0 +1,17 @@
+body { font-family: system-ui, sans-serif; max-width: 640px; margin: 2rem auto; color: #222; }
+.quick-capture { display: flex; gap: .5rem; margin-bottom: 1rem; }
+.quick-capture input { flex: 1; padding: .5rem; font-size: 1rem; }
+.task-list, .subtask-list { list-style: none; padding-left: 0; }
+.subtask-list { padding-left: 1.5rem; margin-top: .5rem; }
+.task { border-bottom: 1px solid #eee; padding: .5rem 0; }
+.task-row { display: flex; align-items: center; gap: .5rem; flex-wrap: wrap; }
+.completed .title { text-decoration: line-through; color: #999; }
+.overdue .due-date { color: #c0392b; font-weight: bold; }
+.priority-badge { font-size: .75rem; padding: .1rem .4rem; border-radius: 3px; background: #eee; }
+.priority-high .priority-badge { background: #f8d7da; }
+.priority-med .priority-badge { background: #fff3cd; }
+.priority-low .priority-badge { background: #d4edda; }
+.tag { font-size: .75rem; color: #06c; }
+.check { cursor: pointer; }
+.delete { color: #c0392b; }
+.empty-state { color: #777; font-style: italic; }
