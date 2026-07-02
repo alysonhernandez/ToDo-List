@@ -6,13 +6,13 @@ ToDo-List is a personal task manager built because no existing to-do app fit my 
 
 ## Tech stack
 
-Python (Flask) for the backend, SQLite for storage, and server-rendered HTML/vanilla JS for the frontend (Jinja templates, one small JS file for quick-capture and inline edit interactions — no frontend framework or build step). This stack was chosen for minimal moving parts: SQLite needs no separate server, Flask keeps routes and business logic easy to unit-test with pytest, and skipping a JS framework means no build tooling to maintain for a single-user app. Task data (priority, due date, tags, subtask links) maps cleanly onto SQLite tables and Flask routes.
+Python stdlib (`wsgiref` for the server, `sqlite3` for storage) plus Jinja2 for templates — no Flask, no JS framework, no build step. This started as a Flask plan but got revised to stdlib-only when the build environment turned out to have no network access to install packages; the upside is it's genuinely the minimal-dependency option (one third-party package, Jinja2, vs. Flask's whole stack) and every route can be unit-tested by calling the WSGI app directly with a constructed environ dict, no test client library needed. Business logic (task rules, sorting, rollup) lives in `models.py` with zero web-layer imports, so it's testable in complete isolation. Task data (priority, due date, tags, subtask links) maps directly onto SQLite tables via plain SQL.
 
 ## Conventions
 
 - Use type hints on all function signatures.
 - No global mutable state — pass the DB connection/session explicitly; don't stash data in module-level variables.
-- Prefer small, focused functions (one responsibility each) over large route handlers; keep business logic (task rules, sorting, rollup of subtask completion) out of route handlers and in a separate module so it's unit-testable without spinning up Flask.
+- Prefer small, focused functions (one responsibility each) over large route handlers; keep business logic (task rules, sorting, rollup of subtask completion) out of `webapp.py` and in `models.py` so it's unit-testable without spinning up a server.
 - Keep the task schema (title, priority, due date, tags, parent_id) as the single source of truth — don't duplicate task fields in multiple places.
 - Write a docstring (one line is fine) for any function whose behavior isn't obvious from its name and signature.
 - Match existing naming and file layout before introducing new patterns.
